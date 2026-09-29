@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material You: colours follow the wallpaper on Android 12+, baseline M3 palette before. -->
+    <style name="AppTheme" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar" />
+</resources>

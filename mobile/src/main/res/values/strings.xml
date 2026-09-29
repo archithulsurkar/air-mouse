@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Air Mouse</string>
+    <string name="service_description">Shows a cursor you aim with your Galaxy Watch and taps where it points. It does not read screen content.</string>
+    <string name="service_on">Cursor service: on ✓</string>
+    <string name="service_off">Cursor service: off. Enable \"Air Mouse\" under Accessibility → Installed apps.</string>
+    <string name="open_settings">Open accessibility settings</string>
+    <string name="sensitivity">Sensitivity: %d</string>
+    <string name="sensitivity_description">Cursor sensitivity</string>
+    <string name="horizontal_boost">Horizontal boost: %d%%</string>
+    <string name="horizontal_boost_description">Horizontal boost</string>
+    <string name="help_title">How to use</string>
+    <string name="invert_x">Invert horizontal</string>
+    <string name="invert_y">Invert vertical</string>
+    <string name="help">On the watch: open Air Mouse and press Start. Hold the watch facing you:\n• Roll your wrist: cursor up/down\n• Raise/lower your elbow: cursor left/right\n\n• Tap watch screen: click\n• Hold: long press\n• Swipe up/down or turn bezel: scroll\n• ◁ ○ □: Back, Home, Recents\n\nCursor going the wrong way? Press Calibrate on the watch while paused.\n\nCursor hides after 10 s idle; move your wrist to bring it back.</string>
+</resources>

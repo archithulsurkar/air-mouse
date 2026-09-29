@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Air Mouse</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="back">◁</string>
+    <string name="home">○</string>
+    <string name="recents">□</string>
+    <string name="back_description">Back</string>
+    <string name="home_description">Home</string>
+    <string name="recents_description">Recent apps</string>
+    <string name="status_no_phone">Install Air Mouse on phone</string>
+    <string name="status_paused">Paused</string>
+    <string name="status_active">Tap = click\nHold = long press\nSwipe / bezel = scroll</string>
+    <string name="no_gyro">No gyroscope</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="cancel">Cancel</string>
+    <string name="cal_hold_still">Watch facing you,\nhold still</string>
+    <string name="cal_move_right">Do your RIGHT move\n(raise or lower elbow)</string>
+    <string name="cal_move_up">Do your UP move\n(roll your wrist)</string>
+    <string name="cal_done">Calibrated ✓</string>
+    <string name="cal_no_movement">No movement seen.\nTry again.</string>
+    <string name="cal_too_similar">Moves too alike.\nTry again.</string>
+</resources>

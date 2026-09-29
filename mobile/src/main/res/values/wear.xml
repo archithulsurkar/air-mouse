@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lets the watch app discover this phone (Protocol.CAPABILITY). -->
+    <string-array name="android_wear_capabilities" translatable="false">
+        <item>airmouse_receiver</item>
+    </string-array>
+</resources>

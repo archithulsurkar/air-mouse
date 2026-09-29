@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The whole screen is the touch pad; buttons sit on top of it. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pad"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <!-- Background and text colour are set per state in MainActivity.updateStatus(). -->
+    <Button
+        android:id="@+id/toggle"
+        style="@style/PillButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="24dp"
+        android:text="@string/start" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="24dp"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="13sp" />
+
+        <!-- Only shown while paused; becomes Cancel during calibration. -->
+        <Button
+            android:id="@+id/calibrate"
+            style="@style/PillButton.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/calibrate" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/back"
+            style="@style/NavButton"
+            android:contentDescription="@string/back_description"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@+id/home"
+            style="@style/NavButton"
+            android:layout_marginHorizontal="8dp"
+            android:contentDescription="@string/home_description"
+            android:text="@string/home" />
+
+        <Button
+            android:id="@+id/recents"
+            style="@style/NavButton"
+            android:contentDescription="@string/recents_description"
+            android:text="@string/recents" />
+    </LinearLayout>
+</FrameLayout>
