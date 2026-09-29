@@ -2,9 +2,9 @@
 
 Use a Galaxy Watch (Wear OS 3+, Watch4 or newer) as an air mouse for its paired Android phone.
 
-[![Air Mouse demo: roll your wrist to move the cursor, tap to click, spin the bezel to scroll](docs/demo.jpg)](docs/demo.mp4)
+[![Air Mouse demo: roll your wrist to move the cursor, tap to click, spin the bezel to scroll](docs/demo.gif)](docs/demo.mp4)
 
-*20-second demo. Click the image to play `docs/demo.mp4`.*
+*Click the GIF for the full video with sound (`docs/demo.mp4`).*
 
 - `wear/` streams gyroscope rotation plus tap/scroll/button events over the Wearable Data Layer.
 - `protocol/` holds the message paths shared by both apps.
