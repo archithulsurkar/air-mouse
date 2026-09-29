@@ -227,6 +227,8 @@ class MainActivity : Activity(), SensorEventListener {
 
     private fun updateStatus() {
         updateCalibrateButton()
+        // Clickable only while paused: while streaming, taps over the text must reach the pad.
+        status.isClickable = !active
         // Calibration owns the status line until it finishes.
         if (calibrator != null) return
         handler.removeCallbacks(restoreStatus)
