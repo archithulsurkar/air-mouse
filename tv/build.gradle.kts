@@ -6,8 +6,9 @@ plugins {
 }
 
 android {
-    // Phone and watch apps must share applicationId and signing key for the Wearable Data Layer.
-    namespace = "com.archi.airmouse"
+    // Same applicationId as the phone app so both share one store listing; the TV talks to the
+    // watch over the LAN, not the Data Layer, so it does not need the same signing key.
+    namespace = "com.archi.airmouse.tv"
     compileSdk = 35
 
     defaultConfig {
@@ -32,5 +33,4 @@ kotlin {
 
 dependencies {
     implementation(project(":receiver"))
-    implementation("com.google.android.gms:play-services-wearable:18.2.0")
 }

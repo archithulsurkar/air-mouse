@@ -2,10 +2,20 @@ package com.archi.airmouse
 
 import java.nio.ByteBuffer
 
-/** Message paths shared by the watch and phone apps. */
+/** Message paths shared by the watch, phone and TV apps. */
 object Protocol {
     /** Declared by the phone app in res/values/wear.xml so the watch can find it. */
     const val CAPABILITY = "airmouse_receiver"
+
+    /** NSD (mDNS) service type the TV advertises on the local network. */
+    const val SERVICE_TYPE = "_airmouse._udp"
+
+    /** Watch -> TV, repeated while connected. Payload: the watch's display name, UTF-8. */
+    const val PATH_HELLO = "/airmouse/hello"
+    /** TV -> watch reply to [PATH_HELLO]. Payload: one byte, [STATUS_PENDING] or [STATUS_APPROVED]. */
+    const val PATH_STATUS = "/airmouse/status"
+    const val STATUS_PENDING: Byte = 0
+    const val STATUS_APPROVED: Byte = 1
 
     const val PATH_START = "/airmouse/start"
     const val PATH_STOP = "/airmouse/stop"

@@ -30,7 +30,7 @@ class MainActivity : Activity(), SensorEventListener {
     private lateinit var calibrationStore: CalibrationStore
     private var calibrator: Calibrator? = null
     private val rates = FloatArray(2)
-    private lateinit var link: PhoneLink
+    private lateinit var targets: Targets
     private lateinit var pad: View
     private lateinit var status: TextView
     private lateinit var toggle: Button
@@ -55,7 +55,7 @@ class MainActivity : Activity(), SensorEventListener {
     private val flushMotion = object : Runnable {
         override fun run() {
             if (pendingYaw != 0f || pendingPitch != 0f) {
-                link.send(Protocol.PATH_MOVE, Protocol.floats(pendingYaw, pendingPitch))
+                targets.send(Protocol.PATH_MOVE, Protocol.floats(pendingYaw, pendingPitch))
                 pendingYaw = 0f
                 pendingPitch = 0f
             }
@@ -65,7 +65,7 @@ class MainActivity : Activity(), SensorEventListener {
 
     private val longPress = Runnable {
         longPressFired = true
-        link.send(Protocol.PATH_LONG_PRESS)
+        targets.send(Protocol.PATH_LONG_PRESS)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -85,13 +85,15 @@ class MainActivity : Activity(), SensorEventListener {
         status = findViewById(R.id.status)
         toggle = findViewById(R.id.toggle)
         calibrate = findViewById(R.id.calibrate)
-        link = PhoneLink(this) { onLinkChanged() }
+        targets = Targets(this) { onLinkChanged() }
 
         toggle.setOnClickListener { if (active) stop() else start() }
         calibrate.setOnClickListener { if (calibrator != null) cancelCalibration() else startCalibration() }
-        findViewById<Button>(R.id.back).setOnClickListener { link.send(Protocol.PATH_BACK) }
-        findViewById<Button>(R.id.home).setOnClickListener { link.send(Protocol.PATH_HOME) }
-        findViewById<Button>(R.id.recents).setOnClickListener { link.send(Protocol.PATH_RECENTS) }
+        // While paused, tapping the status line switches between TVs and the phone.
+        status.setOnClickListener { if (!active && calibrator == null) targets.next() }
+        findViewById<Button>(R.id.back).setOnClickListener { targets.send(Protocol.PATH_BACK) }
+        findViewById<Button>(R.id.home).setOnClickListener { targets.send(Protocol.PATH_HOME) }
+        findViewById<Button>(R.id.recents).setOnClickListener { targets.send(Protocol.PATH_RECENTS) }
         pad.setOnTouchListener { _, event -> onPadTouch(event); true }
         pad.setOnGenericMotionListener { _, event -> onRotary(event) }
         updateStatus()
@@ -99,7 +101,7 @@ class MainActivity : Activity(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
-        link.connect()
+        targets.connect()
         // Rotary (bezel) events go to the focused view.
         pad.requestFocus()
     }
@@ -107,7 +109,7 @@ class MainActivity : Activity(), SensorEventListener {
     override fun onPause() {
         cancelCalibration()
         stop()
-        link.disconnect()
+        targets.disconnect()
         super.onPause()
     }
 
@@ -116,14 +118,15 @@ class MainActivity : Activity(), SensorEventListener {
             status.setText(R.string.no_gyro)
             return
         }
-        // Without a phone every message is dropped; stay paused rather than look active.
-        if (!link.isConnected || calibrator != null) return
+        // Without a ready target every message is dropped; stay paused rather than look active.
+        if (targets.current?.isReady != true || calibrator != null) return
+        targets.lock()
         active = true
         pendingYaw = 0f
         pendingPitch = 0f
         updateSensors()
         handler.post(flushMotion)
-        link.send(Protocol.PATH_START)
+        targets.send(Protocol.PATH_START)
         updateStatus()
     }
 
@@ -136,7 +139,8 @@ class MainActivity : Activity(), SensorEventListener {
         updateSensors()
         handler.removeCallbacks(flushMotion)
         handler.removeCallbacks(longPress)
-        link.send(Protocol.PATH_STOP)
+        targets.send(Protocol.PATH_STOP)
+        targets.unlock()
         updateStatus()
     }
 
@@ -218,7 +222,7 @@ class MainActivity : Activity(), SensorEventListener {
     }
 
     private fun onLinkChanged() {
-        if (active && !link.isConnected) stop() else updateStatus()
+        if (active && targets.current?.isReady != true) stop() else updateStatus()
     }
 
     private fun updateStatus() {
@@ -226,13 +230,14 @@ class MainActivity : Activity(), SensorEventListener {
         // Calibration owns the status line until it finishes.
         if (calibrator != null) return
         handler.removeCallbacks(restoreStatus)
-        status.setText(
-            when {
-                !link.isConnected -> R.string.status_no_phone
-                active -> R.string.status_active
-                else -> R.string.status_paused
-            }
-        )
+        val target = targets.current
+        status.text = when {
+            target == null -> getString(R.string.status_no_target)
+            !target.isReady -> getString(R.string.status_allow_on_tv, target.name)
+            active -> getString(R.string.status_active)
+            targets.all.size > 1 -> getString(R.string.status_paused_switch, target.name)
+            else -> getString(R.string.status_paused_target, target.name)
+        }
         toggle.setText(if (active) R.string.pause else R.string.start)
         // Filled Start is the call to action; Pause drops to tonal so it doesn't shout mid-use.
         toggle.setBackgroundResource(if (active) R.drawable.bg_button_tonal else R.drawable.bg_button_filled)
@@ -280,8 +285,8 @@ class MainActivity : Activity(), SensorEventListener {
                 endTouch()
                 when {
                     longPressFired -> Unit
-                    moved -> link.send(Protocol.PATH_SCROLL, Protocol.floats(downY - event.y))
-                    else -> link.send(Protocol.PATH_CLICK)
+                    moved -> targets.send(Protocol.PATH_SCROLL, Protocol.floats(downY - event.y))
+                    else -> targets.send(Protocol.PATH_CLICK)
                 }
             }
             MotionEvent.ACTION_CANCEL -> endTouch()
@@ -299,7 +304,7 @@ class MainActivity : Activity(), SensorEventListener {
             !event.isFromSource(InputDevice.SOURCE_ROTARY_ENCODER)
         ) return false
         val amount = -event.getAxisValue(MotionEvent.AXIS_SCROLL) * rotaryScrollFactor
-        link.send(Protocol.PATH_SCROLL, Protocol.floats(amount))
+        targets.send(Protocol.PATH_SCROLL, Protocol.floats(amount))
         return true
     }
 

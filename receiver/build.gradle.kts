@@ -1,21 +1,18 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
 }
 
+// Cursor overlay, gesture injection and settings shared by the phone and TV apps.
+// Each app supplies its own Transport (Wearable Data Layer or LAN) via TransportProvider.
 android {
-    // Phone and watch apps must share applicationId and signing key for the Wearable Data Layer.
-    namespace = "com.archi.airmouse"
+    namespace = "com.archi.airmouse.receiver"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.archi.airmouse"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 2
-        versionName = "1.1"
     }
 
     compileOptions {
@@ -31,6 +28,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":receiver"))
-    implementation("com.google.android.gms:play-services-wearable:18.2.0")
+    api(project(":protocol"))
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
 }

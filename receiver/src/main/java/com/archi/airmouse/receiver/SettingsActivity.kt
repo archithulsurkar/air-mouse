@@ -1,11 +1,14 @@
-package com.archi.airmouse
+package com.archi.airmouse.receiver
 
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
@@ -14,15 +17,17 @@ import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.slider.Slider
 import kotlin.math.roundToInt
 
-class MainActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity() {
 
     private lateinit var prefs: MousePrefs
     private lateinit var statusCard: MaterialCardView
     private lateinit var serviceStatus: TextView
+    private var devices: DeviceStore? = null
+    private val devicesListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> showDevices() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_settings)
         prefs = MousePrefs(this)
         statusCard = findViewById(R.id.status_card)
         serviceStatus = findViewById(R.id.service_status)
@@ -63,6 +68,55 @@ class MainActivity : AppCompatActivity() {
         findViewById<MaterialSwitch>(R.id.invert_y).apply {
             isChecked = prefs.invertY
             setOnCheckedChangeListener { _, checked -> prefs.invertY = checked }
+        }
+
+        if ((application as TransportProvider).usesLan) {
+            devices = DeviceStore(this)
+            findViewById<View>(R.id.devices_card).visibility = View.VISIBLE
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        devices?.registerListener(devicesListener)
+        showDevices()
+    }
+
+    override fun onStop() {
+        devices?.unregisterListener(devicesListener)
+        super.onStop()
+    }
+
+    /** One button per watch: Allow for those waiting, Remove for those already allowed. */
+    private fun showDevices() {
+        val store = devices ?: return
+        val list = findViewById<LinearLayout>(R.id.devices_list)
+        list.removeAllViews()
+        val pending = store.pending()
+        val approved = store.approved()
+        findViewById<View>(R.id.devices_empty).visibility =
+            if (pending.isEmpty() && approved.isEmpty()) View.VISIBLE else View.GONE
+        for (device in pending) {
+            list.addView(deviceButton(getString(R.string.device_allow, device.name), filled = true) {
+                store.approve(device.id)
+            })
+        }
+        for (device in approved) {
+            list.addView(deviceButton(getString(R.string.device_remove, device.name), filled = false) {
+                store.remove(device.id)
+            })
+        }
+    }
+
+    private fun deviceButton(text: String, filled: Boolean, onClick: () -> Unit): Button {
+        val style = if (filled) com.google.android.material.R.attr.materialButtonStyle
+            else com.google.android.material.R.attr.materialButtonOutlinedStyle
+        return com.google.android.material.button.MaterialButton(this, null, style).apply {
+            this.text = text
+            setOnClickListener { onClick() }
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = (8 * resources.displayMetrics.density).roundToInt() }
         }
     }
 

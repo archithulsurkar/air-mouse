@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Components are declared by each app, which picks its own launcher category and service config. -->
+<manifest />
