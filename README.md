@@ -2,10 +2,25 @@
 
 Use a Galaxy Watch (Wear OS 3+, Watch4 or newer) as an air mouse for its paired Android phone.
 
+[![Air Mouse demo: roll your wrist to move the cursor, tap to click, spin the bezel to scroll](docs/demo.jpg)](docs/demo.mp4)
+
+*20-second demo. Click the image to play `docs/demo.mp4`.*
+
 - `wear/` streams gyroscope rotation plus tap/scroll/button events over the Wearable Data Layer.
 - `protocol/` holds the message paths shared by both apps.
 - `mobile/` runs an AccessibilityService that draws a cursor overlay and injects taps, long presses,
   scroll swipes and Back/Home/Recents.
+
+## Download
+
+Grab both APKs from the [latest release](https://github.com/archithulsurkar/air-mouse/releases/latest):
+
+- `air-mouse-phone.apk` for the phone (Android 8.0+)
+- `air-mouse-watch.apk` for the watch (Wear OS 3+)
+
+Both are signed with the same key, which the Wearable Data Layer requires. Install both from the same release;
+mixing a release APK with one you built yourself will not connect. Install the watch APK with
+`adb -s <watch> install air-mouse-watch.apk` over wireless debugging.
 
 ## Build and install
 
