@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "AirMouse"
-include(":mobile", ":wear", ":protocol")
+include(":tv", ":mobile", ":wear", ":receiver", ":protocol")

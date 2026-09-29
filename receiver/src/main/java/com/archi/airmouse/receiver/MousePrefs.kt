@@ -1,4 +1,4 @@
-package com.archi.airmouse
+package com.archi.airmouse.receiver
 
 import android.content.Context
 import android.content.SharedPreferences

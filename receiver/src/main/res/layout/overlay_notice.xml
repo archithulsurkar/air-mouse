@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Short on-screen message from CursorService.showNotice(), e.g. a watch waiting for approval. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:maxWidth="560dp"
+    android:background="@drawable/bg_notice"
+    android:gravity="center"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="14dp"
+    android:textColor="#FFFFFFFF"
+    android:textSize="18sp" />

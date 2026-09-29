@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Offset of the arrow tip inside res/drawable/cursor.xml. -->
-    <dimen name="cursor_hotspot">1.3dp</dimen>
-</resources>

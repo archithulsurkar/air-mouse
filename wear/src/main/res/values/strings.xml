@@ -9,9 +9,12 @@
     <string name="back_description">Back</string>
     <string name="home_description">Home</string>
     <string name="recents_description">Recent apps</string>
-    <string name="status_no_phone">Install Air Mouse on phone</string>
-    <string name="status_paused">Paused</string>
     <string name="status_active">Tap = click\nHold = long press\nSwipe / bezel = scroll</string>
+    <string name="status_no_target">No TV or phone found.\nIs Wi-Fi on?</string>
+    <string name="status_allow_on_tv">Allow this watch\non %1$s</string>
+    <string name="status_paused_target">Paused\n→ %1$s</string>
+    <string name="status_paused_switch">Paused\n‹ %1$s ›</string>
+    <string name="target_phone">Phone</string>
     <string name="no_gyro">No gyroscope</string>
     <string name="calibrate">Calibrate</string>
     <string name="cancel">Cancel</string>
